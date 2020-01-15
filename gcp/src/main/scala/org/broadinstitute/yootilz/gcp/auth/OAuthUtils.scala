@@ -1,5 +1,6 @@
 package org.broadinstitute.yootilz.gcp.auth
 
+import java.io.InputStream
 import java.time.Instant
 
 import better.files.File
@@ -21,6 +22,12 @@ object OAuthUtils {
 
   def withScopes(credentials: GoogleCredentials, scopes: String*): GoogleCredentials = {
     credentials.createScoped(scopes: _*)
+  }
+
+  def getCredentials(serviceAccountInOpt: Option[InputStream], scopes: String*): GoogleCredentials = {
+    serviceAccountInOpt.flatMap { serviceAccountIn =>
+      Try(ServiceAccountCredentials.fromStream(serviceAccountIn)).toOption
+    }.getOrElse(GoogleCredentials.getApplicationDefault).createScoped(scopes: _*)
   }
 
   def accessTokenOpt(credentials: GoogleCredentials, minSecondsRemaining: Int = 1): Option[AccessToken] = {

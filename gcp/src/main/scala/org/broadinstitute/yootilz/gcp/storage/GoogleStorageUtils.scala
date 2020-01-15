@@ -5,6 +5,7 @@ import java.nio.channels.FileChannel
 import better.files.File
 import com.google.api.gax.paging.Page
 import com.google.auth.Credentials
+import com.google.cloud.{ReadChannel, WriteChannel}
 import com.google.cloud.storage.Storage.{BlobListOption, CopyRequest}
 import com.google.cloud.storage.{Blob, BlobId, BlobInfo, Storage, StorageOptions}
 import org.broadinstitute.yootilz.core.snag.Snag
@@ -72,7 +73,7 @@ class GoogleStorageUtils(credentials: Credentials, projectIdOpt: Option[String] 
         val timesStrings = s"timePassed=$timePassedString, timeEstimate=$timeEstimateString"
         println(s"Writing pos=$pos, readSize=$readSize, remaining=$remaining, $timesStrings")
         val writtenSize = writer.write(buffer)
-        if(writtenSize == 0) {
+        if (writtenSize == 0) {
           failedAttempts += 1
         } else {
           failedAttempts = 0
@@ -80,7 +81,7 @@ class GoogleStorageUtils(credentials: Credentials, projectIdOpt: Option[String] 
         pos += writtenSize
       }
       writer.close()
-      if(pos < fileSize) {
+      if (pos < fileSize) {
         Left(Snag(s"Could only write $pos of $fileSize bytes."))
       } else {
         Right(pos)
@@ -92,6 +93,10 @@ class GoogleStorageUtils(credentials: Credentials, projectIdOpt: Option[String] 
     val blob = storage.get(blobId)
     blob.downloadTo(file.path)
   }
+
+  def reader(blobId: BlobId): ReadChannel = storage.get(blobId).reader()
+
+  def writer(blobId: BlobId): WriteChannel = storage.get(blobId).writer()
 }
 
 object GoogleStorageUtils {
@@ -99,6 +104,9 @@ object GoogleStorageUtils {
 
   def apply(credentials: Credentials, projectId: String): GoogleStorageUtils =
     new GoogleStorageUtils(credentials, Some(projectId))
+
+  def apply(credentials: Credentials, projectIdOpt: Option[String]): GoogleStorageUtils =
+    new GoogleStorageUtils(credentials, projectIdOpt)
 
   def getPageIterator[T](page: Page[T]): Iterator[Page[T]] = new PageIterator[T](page)
 

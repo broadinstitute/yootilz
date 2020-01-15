@@ -1,7 +1,7 @@
 import sbt.project
 
 ThisBuild / organization := "org.broadinstitute"
-ThisBuild / version      := "0.0.3"
+ThisBuild / version      := "0.1.0"
 ThisBuild / scalaVersion := "2.13.1"
 ThisBuild / scalacOptions ++= Seq("-feature", "-deprecation", "-unchecked")
 
