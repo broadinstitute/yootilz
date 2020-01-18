@@ -97,6 +97,11 @@ class GoogleStorageUtils(credentials: Credentials, projectIdOpt: Option[String] 
   def reader(blobId: BlobId): ReadChannel = storage.get(blobId).reader()
 
   def writer(blobId: BlobId): WriteChannel = storage.get(blobId).writer()
+
+  def writerToNewBlob(blobId: BlobId): WriteChannel = {
+    val blobInfo = BlobInfo.newBuilder(blobId).setContentType("text/plain").build()
+    storage.writer(blobInfo)
+  }
 }
 
 object GoogleStorageUtils {
