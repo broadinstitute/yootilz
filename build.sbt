@@ -1,14 +1,14 @@
 import sbt.project
 
 ThisBuild / organization := "org.broadinstitute"
-ThisBuild / version      := "0.1.2"
-ThisBuild / scalaVersion := "2.13.1"
+ThisBuild / version      := "0.1.3"
+ThisBuild / scalaVersion := "2.13.2"
 ThisBuild / scalacOptions ++= Seq("-feature", "-deprecation", "-unchecked")
 
 
-val scalaTestV = "3.1.0"
+val scalaTestV = "3.1.1"
 val betterFilesV = "3.8.0"
-val sttpV = "2.0.0-RC6"
+val sttpV = "2.1.1"
 val googleAuthV = "0.19.0"
 
 lazy val core = (project in file("core"))

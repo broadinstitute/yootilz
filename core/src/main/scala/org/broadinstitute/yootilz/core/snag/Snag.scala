@@ -12,19 +12,21 @@ trait Snag {
   def prefix(message: String): WrapperSnag = Snag(message, this)
 
   def prefix(message: String, report: String): WrapperSnag = Snag(message, report, this)
+
+  def tags: Set[SnagTag]
 }
 
 object Snag {
 
-  case class BasicSnag(message: String, report: String) extends Snag
+  case class BasicSnag(message: String, report: String, tags: Set[SnagTag]) extends Snag
 
-  case class WrapperSnag(messagePrefix: String, reportPrefix: String, cause: Snag) extends Snag {
+  case class WrapperSnag(messagePrefix: String, reportPrefix: String, cause: Snag, tags: Set[SnagTag]) extends Snag {
     override def message: String = messagePrefix + ": " + cause.message
 
     override def report: String = reportPrefix + "\n" + cause.report
   }
 
-  case class ThrowableSnag(throwable: Throwable) extends Snag {
+  case class ThrowableSnag(throwable: Throwable, tags: Set[SnagTag]) extends Snag {
     override def message: String = throwable.getMessage
 
     override def report: String = {
@@ -34,13 +36,15 @@ object Snag {
     }
   }
 
-  def apply(message: String): BasicSnag = BasicSnag(message, message)
+  def apply(message: String, tags: SnagTag*): BasicSnag = BasicSnag(message, message, tags.toSet)
 
-  def apply(message: String, report: String): BasicSnag = BasicSnag(message, report)
+  def apply(message: String, report: String, tags: SnagTag*): BasicSnag = BasicSnag(message, report, tags.toSet)
 
-  def apply(message: String, cause: Snag): WrapperSnag = WrapperSnag(message, message, cause)
+  def apply(message: String, cause: Snag, tags: SnagTag*): WrapperSnag =
+    WrapperSnag(message, message, cause, tags.toSet)
 
-  def apply(message: String, report: String, cause: Snag): WrapperSnag = WrapperSnag(message, report, cause)
+  def apply(message: String, report: String, cause: Snag, tags: SnagTag*): WrapperSnag =
+    WrapperSnag(message, report, cause, tags.toSet)
 
-  def apply(throwable: Throwable): ThrowableSnag = ThrowableSnag(throwable)
+  def apply(throwable: Throwable, tags: SnagTag*): ThrowableSnag = ThrowableSnag(throwable, tags.toSet)
 }
