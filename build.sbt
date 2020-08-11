@@ -1,13 +1,13 @@
 import sbt.project
 
 ThisBuild / organization := "org.broadinstitute"
-ThisBuild / version      := "0.1.3"
-ThisBuild / scalaVersion := "2.13.2"
+ThisBuild / version      := "0.1.4"
+ThisBuild / scalaVersion := "2.13.3"
 ThisBuild / scalacOptions ++= Seq("-feature", "-deprecation", "-unchecked")
 
 
-val scalaTestV = "3.1.1"
-val betterFilesV = "3.8.0"
+val scalaTestV = "3.2.0"
+val betterFilesV = "3.9.1"
 val sttpV = "2.1.1"
 val googleAuthV = "0.19.0"
 
