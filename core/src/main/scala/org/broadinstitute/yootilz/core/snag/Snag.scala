@@ -27,7 +27,7 @@ object Snag {
   }
 
   case class ThrowableSnag(throwable: Throwable, tags: Set[SnagTag]) extends Snag {
-    override def message: String = throwable.getMessage
+    override def message: String = "Caught " + throwable.getClass.getName + ": " + throwable.getMessage
 
     override def report: String = {
       val stringWriter = new StringWriter()
